@@ -68,6 +68,14 @@ endef
 
 define Package/adguardhome/install
 	$(call GoPackage/Package/Install/Bin,$(1))
+	# 确保二进制文件在标准路径
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/AdGuardHome $(1)/usr/bin/AdGuardHome
+	
+	# 安装前端文件到永久位置
+	$(INSTALL_DIR) $(1)/usr/share/AdGuardHome
+	$(CP) $(PKG_BUILD_DIR)/AdGuardHome_frontend/* $(1)/usr/share/AdGuardHome/ 2>/dev/null || true
+
 	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/adguardhome.init $(1)/etc/init.d/adguardhome
 
